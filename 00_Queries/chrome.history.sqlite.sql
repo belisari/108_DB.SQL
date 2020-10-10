@@ -4,7 +4,10 @@
 --C:\Users\Antoni Wota\AppData\Local\Google\Chrome\User Data\Profile 1\History   --normalne   
 
 --SELECT *
-select u.url, u.title
+select
+datetime(v.visit_time/1000000-11644473600,'unixepoch') as data,
+u.url, 
+u.title
 from 
 visits v,
 urls u
@@ -14,7 +17,7 @@ and u.title not like '%allegro%'
 and u.title not like '%pokemon%'  and u.title not like '%Pokémon%'
 and u.title not like '%bankowoœæ%'
 and u.url not like '%mail.google.com%'
-order by visit_time;
+order by visit_time desc;
 
 
 select 
