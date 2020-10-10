@@ -14,6 +14,28 @@ select Description + ' jjhhyy' from [dbo].Users where Id = 1;   --varchar(200)
 
 --
 SELECT CURRENT_USER;  --dbo   !!! bo jest tylko taki user; tu nie ma emilw, bo emilw to jest Login
+SELECT SYSTEM_USER;  --dbo   !!! bo jest tylko taki user; tu nie ma emilw, bo emilw to jest Login
+
+SELECT QUOTENAME('EMIL')
+
+DECLARE @nameTable NVARCHAR(255);
+SET @nameTable = '[dbo].WOTA'
+SET @nameTable = (SELECT REPLACE(@nameTable,'[',''))
+SET @nameTable = (SELECT REPLACE(@nameTable,']',''))
+SET @nameTable = QUOTENAME(@nameTable)  --dodaje [] wokó³ tekstu
+SET @nameTable = (SELECT REPLACE(@nameTable,'.','].['))
+SELECT @nameTable  --[dbo].[WOTA]
+
+
+SET @QUERY = N'TRUNCATE TABLE ' + @nameTable + ';'
+
+
+
+
+--mogê siê zalogowaæ jako tt_sql_replatform i sprawdziæ;
+
+SELECT IS_MEMBER('db_owner');
+
 
 select * from Users;
 
@@ -73,3 +95,6 @@ SELECT SESSION_USER AS [SESSION_USER],
 
 USE [GazooDB]; -- can only revert from DB where EXECUTE AS was run
 REVERT;
+
+
+
