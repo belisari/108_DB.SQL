@@ -1,0 +1,54 @@
+# azure-pipelines.yml
+# Add this stage BEFORE your dacpac deploy stage.
+# It will block the pipeline if any migration script contains forbidden commands.
+
+trigger:
+  paths:
+    include:
+      - src/Database/Migrations/**   # adjust to your migrations folder
+      - tools/SqlMigrationValidator/**
+
+stages:
+
+  # ---------------------------------------------------------------------------
+  # Stage 1: Validate migration scripts
+  # ---------------------------------------------------------------------------
+  - stage: ValidateMigrations
+    displayName: 'Validate SQL Migration Scripts'
+    jobs:
+      - job: Validate
+        displayName: 'Lint migration scripts with ScriptDom'
+        pool:
+          vmImage: 'windows-latest'   # ScriptDom works on Linux too, but windows is common for SSDT pipelines
+
+        steps:
+          - checkout: self
+
+          - task: UseDotNet@2
+            displayName: 'Use .NET 8'
+            inputs:
+              packageType: sdk
+              version: '8.x'
+
+          - task: PowerShell@2
+            displayName: 'Run SqlMigrationValidator'
+            inputs:
+              filePath: 'tools/SqlMigrationValidator/Invoke-MigrationValidation.ps1'
+              arguments: >
+                -MigrationsPath "$(Build.SourcesDirectory)/src/Database/Migrations"
+                -ValidatorProjectPath "$(Build.SourcesDirectory)/tools/SqlMigrationValidator/SqlMigrationValidator.csproj"
+                -FailOnWarnings $true
+            # Exit code 1 automatically fails the task; no extra config needed.
+
+  # ---------------------------------------------------------------------------
+  # Stage 2: Build & deploy dacpac (only runs if stage 1 passes)
+  # ---------------------------------------------------------------------------
+  - stage: DeployDacpac
+    displayName: 'Deploy Dacpac'
+    dependsOn: ValidateMigrations   # <-- hard dependency
+    condition: succeeded()
+    jobs:
+      - job: Deploy
+        displayName: 'Deploy database'
+        steps:
+          - script: echo "Your dacpac deploy steps here"

@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AssemblyName>SqlMigrationValidator</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Official Microsoft T-SQL parser — same engine used by SSDT/SSMS -->
+    <PackageReference Include="Microsoft.SqlServer.TransactSql.ScriptDom" Version="170.191.0" />
+  </ItemGroup>
+
+</Project>

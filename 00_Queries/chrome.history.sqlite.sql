@@ -1,4 +1,8 @@
 
+
+
+
+
 --paths
 --C:\Users\Antoni Wota\AppData\Local\Google\Chrome\User Data\Profile 3\History   --librus
 --C:\Users\Antoni Wota\AppData\Local\Google\Chrome\User Data\Profile 1\History   --normalne   
@@ -30,3 +34,15 @@ where v.url = u.id
 
  
 --select visit_time from visits order by visit_time desc;
+
+
+
+Select * From urls;
+
+SELECT name FROM sqlite_schema WHERE type='table' ORDER BY name
+SELECT name FROM sqlite_schema
+
+PRAGMA journal_mode
+
+
+

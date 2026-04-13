@@ -1,3 +1,29 @@
+--#########################################################################################################
+--
+--   localhost, ms sql
+--
+--#########################################################################################################
+
+
+
+----MS Sql AppMonitorDB ---------------------------------------
+use AppMonitorDB
+select * from dbo.[User]
+select * from dbo.Activity;
+
+
+
+----MySql ---------------------------------------
+SELECT version();
+show databases;
+
+SELECT *  FROM mysql.user;
+SELECT user,plugin,host FROM mysql.user;
+
+SELECT variable, value, set_time, set_by FROM sys.sys_config;
+
+
+
 
 use [test01];
 select * from [dbo].Users;
@@ -98,3 +124,10 @@ REVERT;
 
 
 
+
+
+--sys
+select connect_time, protocol_type, client_net_address, client_tcp_port from sys.dm_exec_connections;
+
+select * from sys.tables;
+select * from spt_monitor;
