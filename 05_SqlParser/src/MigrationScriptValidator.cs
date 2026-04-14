@@ -1,5 +1,4 @@
 using Microsoft.SqlServer.TransactSql.ScriptDom;
-using SqlMigrationValidator.Visitors;
 
 namespace SqlMigrationValidator;
 
@@ -22,10 +21,10 @@ public class MigrationScriptValidator
         }
         catch (Exception ex)
         {
-            return
-            [
+            return new[]
+            {
                 new Violation(filePath, "FILE_READ_ERROR", ex.Message, 0, 0, Severity.Error)
-            ];
+            };
         }
 
         return ValidateSql(sql, filePath);
@@ -55,9 +54,8 @@ public class MigrationScriptValidator
         }
 
         // Even with parse errors, ScriptDom returns a partial AST — still walk it
-        var visitor = new ForbiddenStatementVisitor(filePath);
-        fragment.Accept(visitor);
-        violations.AddRange(visitor.Violations);
+        var composite = new CompositeVisitor(filePath);
+        violations.AddRange(composite.Accept(fragment));
 
         return violations;
     }
@@ -68,13 +66,7 @@ public class MigrationScriptValidator
     public IReadOnlyList<Violation> ValidateDirectory(string directory, string searchPattern = "*.sql")
     {
         if (!Directory.Exists(directory))
-            return [new Violation(
-                directory, "DIR_NOT_FOUND",
-                $"Directory not found: {directory}",
-                0,
-                0,
-                Severity.Error)
-            ];
+            return new[] { new Violation(directory, "DIR_NOT_FOUND", $"Directory not found: {directory}", 0, 0, Severity.Error) };
 
         var allViolations = new List<Violation>();
         var files = Directory.GetFiles(directory, searchPattern, SearchOption.AllDirectories);
