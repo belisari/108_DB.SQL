@@ -1,6 +1,3 @@
--- Example: BAD migration script
--- This file demonstrates everything the validator will REJECT.
-
 -- Switching database context
 USE [MyDatabase]
 GO
@@ -23,7 +20,6 @@ BEGIN TRANSACTION
     IF @@TRANCOUNT > 0
        PRINT 'still inside a transaction'
 
-
     -- Explicit commit inside the outer transaction
     COMMIT TRANSACTION
 
@@ -37,3 +33,29 @@ UPDATE dbo.Orders SET StatusCode = 'DONE' WHERE Id = 1
 
 -- Session identity global — unreliable in combined scripts
 INSERT INTO dbo.Audit (EntityId, CreatedAt) VALUES (@@IDENTITY, GETUTCDATE())
+
+PRINT @@ERROR;
+
+PRINT @@NON_EXISTING_GLOBAL_VARIABLE;
+
+
+-- Ok
+EXEC dbo.CleanupOrders
+
+-- Ok
+DECLARE @cutoffDate DATETIME = '2020-01-01'
+EXEC dbo.CleanupOrders @cutoffDate = '2020-01-01'
+EXECUTE dbo.SomeProc @cutoffDate;
+
+EXECUTE dbo.SomeProc @NOT_DECLARED_VAR;
+
+-- WARNING — dynamic string — EXEC (@variable)
+DECLARE @sql NVARCHAR(500) = 'UPDATE dbo.Orders SET Status = 1';
+EXEC (@sql);
+
+-- WARNING — dynamic string — EXEC with a string literal directly
+EXEC ('UPDATE dbo.Orders SET Status = 1');
+
+-- sp_executesql
+DECLARE @sql NVARCHAR(500) = N'UPDATE dbo.Orders SET Status = 1'
+EXEC sp_executesql @sql;

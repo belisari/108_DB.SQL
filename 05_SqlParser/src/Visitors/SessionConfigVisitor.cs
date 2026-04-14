@@ -2,12 +2,7 @@ using Microsoft.SqlServer.TransactSql.ScriptDom;
 
 namespace SqlMigrationValidator.Visitors;
 
-/// <summary>
-/// Detects statements that change session state or database context.
-/// These can affect subsequent scripts in the combined post-deployment script
-/// in unpredictable ways.
-/// </summary>
-public sealed class SessionConfigVisitor : MigrationVisitorBase
+public sealed class SessionConfigVisitor : VisitorBase
 {
     public SessionConfigVisitor(string filePath) : base(filePath) { }
 
@@ -19,5 +14,10 @@ public sealed class SessionConfigVisitor : MigrationVisitorBase
     public override void Visit(SetTransactionIsolationLevelStatement node) =>
         AddWarning("NO_SET_ISOLATION",
             $"SET TRANSACTION ISOLATION LEVEL {node.Level} can interfere with the outer transaction — discuss with the DBA team.",
+            node);
+
+    public override void Visit(WaitForStatement node) =>
+        AddWarning("NO_WAITFOR",
+            "WAITFOR will block the entire post-deployment transaction for its duration — remove it or move the delay logic to the pipeline.",
             node);
 }

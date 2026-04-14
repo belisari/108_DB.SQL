@@ -7,7 +7,7 @@ namespace SqlMigrationValidator.Visitors;
 /// The post-deployment script runs inside a single managed transaction —
 /// nested BEGIN/COMMIT/ROLLBACK/SAVE will corrupt it.
 /// </summary>
-public sealed class TransactionControlVisitor : MigrationVisitorBase
+public sealed class TransactionControlVisitor : VisitorBase
 {
     public TransactionControlVisitor(string filePath) : base(filePath) { }
 

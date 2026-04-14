@@ -3,44 +3,24 @@ using SqlMigrationValidator.Visitors;
 
 namespace SqlMigrationValidator;
 
-/// <summary>
-/// Runs all registered visitors against a parsed T-SQL fragment and
-/// aggregates their violations.
-///
-/// To add a new rule category:
-///   1. Create a new class in the Visitors/ folder that extends MigrationVisitorBase.
-///   2. Register it in the BuildVisitors() method below — nothing else changes.
-/// </summary>
-public class CompositeVisitor
+public class CompositeVisitor(string filePath)
 {
-    private readonly IReadOnlyList<MigrationVisitorBase> _visitors;
+    private static readonly IReadOnlyList<Type> VisitorTypes =
+        typeof(VisitorBase).Assembly
+            .GetTypes()
+            .Where(t => t.IsSubclassOf(typeof(VisitorBase)) && !t.IsAbstract)
+            .ToList();
 
-    public CompositeVisitor(string filePath)
-    {
-        _visitors = BuildVisitors(filePath);
-    }
-
-    private static IReadOnlyList<MigrationVisitorBase> BuildVisitors(string filePath) =>
-    [
-        new TransactionControlVisitor(filePath),
-        new IndexDdlVisitor(filePath),
-        new TableDdlVisitor(filePath),
-        new SchemaObjectDdlVisitor(filePath),
-        new SessionConfigVisitor(filePath),
-        new DynamicSqlVisitor(filePath),
-        new GlobalVariableVisitor(filePath),
-    ];
-
-    /// <summary>
-    /// Accepts the parsed fragment into every visitor and returns all violations,
-    /// sorted by line then column so output matches source order.
-    /// </summary>
     public IReadOnlyList<Violation> Accept(TSqlFragment fragment)
     {
-        foreach (var visitor in _visitors)
+        List<VisitorBase> visitors = VisitorTypes
+            .Select(t => (VisitorBase)Activator.CreateInstance(t, filePath)!)
+            .ToList();
+
+        foreach (VisitorBase visitor in visitors)
             fragment.Accept(visitor);
 
-        return _visitors
+        return visitors
             .SelectMany(v => v.Violations)
             .OrderBy(v => v.Line)
             .ThenBy(v => v.Column)

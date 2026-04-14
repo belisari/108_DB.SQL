@@ -52,8 +52,8 @@ foreach (var group in byFile)
             ? ConsoleColor.Red
             : ConsoleColor.Yellow;
 
-        var icon = v.Severity == Severity.Error ? "✗ ERROR  " : "⚠ WARNING";
-        Console.WriteLine($"   {icon}  Line {v.Line,4}, Col {v.Column,3}  [{v.RuleName}]");
+        var icon = v.Severity == Severity.Error ? "ERROR  " : "WARNING";
+        Console.WriteLine($"{icon} Line {v.Line,4}, Col {v.Column,3}  [{v.RuleName}]");
         Console.ResetColor();
         Console.WriteLine($"            {v.Message}");
     }

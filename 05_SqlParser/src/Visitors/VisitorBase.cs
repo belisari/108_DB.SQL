@@ -2,22 +2,14 @@ using Microsoft.SqlServer.TransactSql.ScriptDom;
 
 namespace SqlMigrationValidator.Visitors;
 
-/// <summary>
-/// Base class for all migration script visitors.
-/// Provides shared AddError / AddWarning helpers and the violation list.
-/// Subclasses override Visit* methods for the statement types they care about.
-/// </summary>
-public abstract class MigrationVisitorBase : TSqlFragmentVisitor
+public abstract class VisitorBase : TSqlFragmentVisitor
 {
     private readonly List<Violation> _violations = new();
     protected string FilePath { get; }
 
     public IReadOnlyList<Violation> Violations => _violations;
 
-    protected MigrationVisitorBase(string filePath)
-    {
-        FilePath = filePath;
-    }
+    protected VisitorBase(string filePath) => FilePath = filePath;
 
     protected void AddError(string rule, string message, TSqlFragment node) =>
         _violations.Add(new Violation(
