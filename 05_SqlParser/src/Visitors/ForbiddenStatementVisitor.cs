@@ -1,6 +1,6 @@
 using Microsoft.SqlServer.TransactSql.ScriptDom;
 
-namespace SqlMigrationValidator;
+namespace SqlMigrationValidator.Visitors;
 
 /// <summary>
 /// Walks the T-SQL AST and collects violations.
@@ -12,6 +12,48 @@ public class ForbiddenStatementVisitor : TSqlFragmentVisitor
     private readonly List<Violation> _violations = new();
 
     public IReadOnlyList<Violation> Violations => _violations;
+
+    /// <summary>
+    /// Global variables (@@name) that are forbidden in migration scripts.
+    /// Stored normalised to uppercase, with @@ prefix.
+    /// </summary>
+    private static readonly HashSet<string> ForbiddenGlobals = new(StringComparer.OrdinalIgnoreCase)
+    {
+        // Transaction state — reading these implies scripts are trying to
+        // inspect or branch on the managed transaction, which is forbidden.
+        "@@TRANCOUNT",
+        "@@NESTLEVEL",
+
+        // Error-handling globals — use TRY/CATCH instead.
+        "@@ERROR",
+
+        // Row/identity side-effects that can mislead in combined scripts.
+        "@@ROWCOUNT",
+        "@@IDENTITY",       // use SCOPE_IDENTITY() or OUTPUT instead
+
+        // Server/connection state — scripts must not be environment-aware.
+        "@@SERVERNAME",
+        "@@VERSION",
+        "@@SPID",
+        "@@DBTS",
+    };
+
+    /// <summary>
+    /// Reason hints shown alongside the violation message, keyed by normalised name.
+    /// Falls back to a generic message for unlisted entries.
+    /// </summary>
+    private static readonly Dictionary<string, string> GlobalReasons = new(StringComparer.OrdinalIgnoreCase)
+    {
+        ["@@TRANCOUNT"] = "Reading @@TRANCOUNT implies dependency on transaction nesting level — scripts must not inspect or branch on the managed transaction.",
+        ["@@NESTLEVEL"] = "@@NESTLEVEL exposes execution nesting — migration scripts must not depend on how they are called.",
+        ["@@ERROR"] = "@@ERROR is legacy error handling — use TRY/CATCH blocks instead.",
+        ["@@ROWCOUNT"] = "@@ROWCOUNT after a statement is unreliable when scripts are combined — capture row counts via OUTPUT or explicit variables if needed.",
+        ["@@IDENTITY"] = "@@IDENTITY returns the last identity across the whole session and can return unexpected values in combined scripts — use SCOPE_IDENTITY() or an OUTPUT clause instead.",
+        ["@@SERVERNAME"] = "Scripts must not branch on server name — environment-specific logic belongs in pipeline variables, not in migration SQL.",
+        ["@@VERSION"] = "Scripts must not branch on server version — target a minimum supported version and write accordingly.",
+        ["@@SPID"] = "@@SPID (session ID) is environment-specific and must not be used in migration scripts.",
+        ["@@DBTS"] = "@@DBTS (current timestamp) is non-deterministic across environments — use GETUTCDATE() or SYSDATETIMEOFFSET() instead.",
+    };
 
     public ForbiddenStatementVisitor(string filePath)
     {
@@ -163,6 +205,23 @@ public class ForbiddenStatementVisitor : TSqlFragmentVisitor
         AddError("NO_BULK_INSERT",
             "BULK INSERT is forbidden — it cannot participate in a standard transaction.",
             node);
+
+    // -------------------------------------------------------------------------
+    // Forbidden global variables  (@@name)
+    // -------------------------------------------------------------------------
+
+    public override void Visit(GlobalVariableExpression node)
+    {
+        // node.Name is already the full "@@TRANCOUNT" string (with @@ prefix).
+        if (!ForbiddenGlobals.Contains(node.Name))
+            return;
+
+        var reason = GlobalReasons.TryGetValue(node.Name, out var hint)
+            ? hint
+            : $"{node.Name} is not permitted in migration scripts.";
+
+        AddError("NO_GLOBAL_VARIABLE", $"{node.Name}: {reason}", node);
+    }
 
     // -------------------------------------------------------------------------
     // Helpers
