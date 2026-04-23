@@ -29,7 +29,7 @@ param(
     [Parameter(Mandatory)]
     [string]$MigrationsPath,
 
-    [string]$ValidatorProjectPath = "$PSScriptRoot/../SqlMigrationValidator/SqlMigrationValidator.csproj",
+    [string]$ValidatorProjectPath = "$PSScriptRoot/SqlMigrationValidator.Cli/SqlMigrationValidator.Cli.csproj",
 
     [string]$ValidatorExePath = "",
 

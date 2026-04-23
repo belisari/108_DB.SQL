@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>12</LangVersion>
+    <AssemblyName>SqlMigrationValidator.MSBuildTask</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SqlMigrationValidator.Core\SqlMigrationValidator.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Provided by the MSBuild host at runtime — compile-time reference only -->
+    <PackageReference Include="Microsoft.Build.Framework" Version="17.14.28">
+      <ExcludeAssets>Runtime</ExcludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.14.28">
+      <ExcludeAssets>Runtime</ExcludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+</Project>
