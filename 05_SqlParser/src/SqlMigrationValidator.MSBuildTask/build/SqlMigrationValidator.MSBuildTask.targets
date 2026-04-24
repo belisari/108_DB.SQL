@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <!-- Set to false in your project to skip validation entirely -->
+    <RunSqlMigrationValidation Condition="'$(RunSqlMigrationValidation)' == ''">true</RunSqlMigrationValidation>
+    <MigrationSearchPattern Condition="'$(MigrationSearchPattern)' == ''">*.sql</MigrationSearchPattern>
+    <TreatMigrationWarningsAsErrors Condition="'$(TreatMigrationWarningsAsErrors)' == ''">false</TreatMigrationWarningsAsErrors>
+  </PropertyGroup>
+
+  <UsingTask
+    TaskName="SqlMigrationValidator.MSBuildTask.ValidateMigrationScriptsTask"
+    AssemblyFile="$(MSBuildThisFileDirectory)..\tasks\net472\SqlMigrationValidator.MSBuildTask.dll" />
+
+  <!--
+    Runs before Build when MigrationsDirectory is set.
+    Set $(MigrationsDirectory) in your project to opt in.
+  -->
+  <Target Name="ValidateMigrationScripts"
+          BeforeTargets="Build"
+          Condition="'$(RunSqlMigrationValidation)' == 'true' and '$(MigrationsDirectory)' != ''">
+    <ValidateMigrationScriptsTask
+      MigrationsDirectory="$(MigrationsDirectory)"
+      SearchPattern="$(MigrationSearchPattern)"
+      TreatWarningsAsErrors="$(TreatMigrationWarningsAsErrors)" />
+  </Target>
+
+</Project>

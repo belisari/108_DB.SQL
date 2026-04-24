@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>12</LangVersion>
+    <AssemblyName>SqlMigrationValidator.MSBuildTask</AssemblyName>
+
+    <!-- NuGet package metadata -->
+    <PackageId>SqlMigrationValidator.MSBuildTask</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>Emil KO</Authors>
+    <Description>MSBuild task that validates SQL migration scripts for common anti-patterns.</Description>
+
+    <!-- Place the task assembly under tasks/net472/ instead of the default lib/ folder.
+         MSBuild loads the task from AssemblyFile (in the .targets file), not from lib/. -->
+    <BuildOutputTargetFolder>tasks</BuildOutputTargetFolder>
+    <!-- Don't emit a NuGet dependency node — all deps are bundled alongside the DLL. -->
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+    <!-- Mark as dev-only so the package is not propagated as a transitive dependency. -->
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SqlMigrationValidator.Core\SqlMigrationValidator.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Provided by the MSBuild host at runtime — compile-time reference only -->
+    <PackageReference Include="Microsoft.Build.Framework" Version="17.14.28">
+      <ExcludeAssets>Runtime</ExcludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.14.28">
+      <ExcludeAssets>Runtime</ExcludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Auto-imported .targets file — wires up UsingTask and the ValidateMigrationScripts target -->
+    <None Include="build\$(PackageId).targets" Pack="true" PackagePath="build\" />
+    <!-- Bundle dependency DLLs next to the task assembly so MSBuild can resolve them at load time -->
+    <None Include="$(OutputPath)SqlMigrationValidator.Core.dll"
+          Pack="true" PackagePath="tasks\net472\" Visible="false" />
+    <None Include="$(OutputPath)Microsoft.SqlServer.TransactSql.ScriptDom.dll"
+          Pack="true" PackagePath="tasks\net472\" Visible="false" />
+  </ItemGroup>
+
+</Project>

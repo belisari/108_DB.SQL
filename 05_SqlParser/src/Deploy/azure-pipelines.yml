@@ -36,7 +36,7 @@ stages:
               filePath: 'tools/SqlMigrationValidator/Invoke-MigrationValidation.ps1'
               arguments: >
                 -MigrationsPath "$(Build.SourcesDirectory)/src/Database/Migrations"
-                -ValidatorProjectPath "$(Build.SourcesDirectory)/tools/SqlMigrationValidator/SqlMigrationValidator.csproj"
+                -ValidatorProjectPath "$(Build.SourcesDirectory)/tools/SqlMigrationValidator/SqlMigrationValidator.Cli/SqlMigrationValidator.Cli.csproj"
                 -FailOnWarnings $true
             # Exit code 1 automatically fails the task; no extra config needed.
 

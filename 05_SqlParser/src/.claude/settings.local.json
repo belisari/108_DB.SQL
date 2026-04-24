@@ -1,0 +1,24 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git checkout *)",
+      "Bash(powershell *)",
+      "Bash(mkdir -p /c/Source/108_DB.SQL/05_SqlParser/src/SqlMigrationValidator.Core/Visitors)",
+      "Bash(mkdir -p /c/Source/108_DB.SQL/05_SqlParser/src/SqlMigrationValidator.Cli)",
+      "Bash(mkdir -p /c/Source/108_DB.SQL/05_SqlParser/src/SqlMigrationValidator.MSBuildTask)",
+      "Bash(dotnet build *)",
+      "Bash(dotnet package *)",
+      "Bash(dotnet restore *)",
+      "Bash(dotnet run *)",
+      "Bash(git add *)",
+      "Bash(grep -E \"\\\\.\\(targets|props|nuspec\\)$\")",
+      "Read(//c/Source/108_DB.SQL/05_SqlParser/**)",
+      "Bash(find . -maxdepth 2 -type f \\\\\\( -name \"*.targets\" -o -name \"*.props\" -o -name \"*.nuspec\" \\\\\\) -not -path \"*/obj/*\" -not -path \"*/bin/*\")",
+      "Bash(dotnet sln *)",
+      "Bash(dotnet pack *)",
+      "Bash(dotnet nuget *)",
+      "Bash(unzip -l LocalPackages/SqlMigrationValidator.MSBuildTask.1.0.0.nupkg)",
+      "Bash(unzip -l \"C:\\\\Source\\\\108_DB.SQL\\\\05_SqlParser\\\\LocalPackages\\\\SqlMigrationValidator.MSBuildTask.1.0.0.nupkg\")"
+    ]
+  }
+}
