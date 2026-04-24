@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <MigrationsDirectory>$(MSBuildProjectDirectory)\Migrations</MigrationsDirectory>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SqlMigrationValidator.MSBuildTask" Version="1.0.0" />
+  </ItemGroup>
+
+</Project>

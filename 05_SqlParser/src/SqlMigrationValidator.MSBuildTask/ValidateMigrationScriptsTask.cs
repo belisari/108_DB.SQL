@@ -2,22 +2,6 @@ using Microsoft.Build.Framework;
 using Microsoft.Build.Utilities;
 
 namespace SqlMigrationValidator.MSBuildTask;
-
-/// <summary>
-/// MSBuild task that validates SQL migration scripts using the same rules as the CLI.
-///
-/// Usage in a .sqlproj (or any MSBuild project):
-///
-///   &lt;UsingTask
-///     TaskName="SqlMigrationValidator.MSBuildTask.ValidateMigrationScriptsTask"
-///     AssemblyFile="$(MSBuildThisFileDirectory)SqlMigrationValidator.MSBuildTask.dll" /&gt;
-///
-///   &lt;Target Name="ValidateMigrations" BeforeTargets="Build"&gt;
-///     &lt;ValidateMigrationScriptsTask
-///       MigrationsDirectory="$(MSBuildProjectDirectory)\Migrations"
-///       TreatWarningsAsErrors="false" /&gt;
-///   &lt;/Target&gt;
-/// </summary>
 public sealed class ValidateMigrationScriptsTask : Task
 {
     [Required]
