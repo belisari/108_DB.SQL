@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+
+    <!--
+      Marks this assembly as a Roslyn analyzer component.
+      When this project is packed into a NuGet package, the SDK automatically
+      places the DLL under /analyzers/dotnet/cs/ — which is where the compiler
+      looks for analyzer assemblies.
+    -->
+    <IsRoslynComponent>true</IsRoslynComponent>
+
+    <!-- Analyzers must not be copied to the consumer's output directory -->
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+
+    <EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--
+      Microsoft.CodeAnalysis.CSharp gives us the Roslyn API:
+        - SyntaxTree / SyntaxNode
+        - SemanticModel / ISymbol
+        - DiagnosticAnalyzer base class
+      We use PrivateAssets="all" so this dependency does NOT flow to consumers.
+    -->
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.9.2" PrivateAssets="all" />
+
+    <!--
+      Meta-analyzer that checks your analyzer code itself for common mistakes
+      (wrong target framework, missing attributes, etc.)
+    -->
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="3.3.4" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>

@@ -13,4 +13,16 @@
     <PackageReference Include="Microsoft.SqlServer.TransactSql.ScriptDom" Version="170.191.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!--
+      Reference our custom analyzer as an <Analyzer> item, not a normal project reference.
+      This tells MSBuild/Roslyn to load the DLL as an analyzer plugin rather than
+      a compile-time dependency — the analyzer runs during compilation but is NOT
+      included in the output assembly or its transitive references.
+    -->
+    <ProjectReference Include="..\SqlMigrationValidator.Analyzer\SqlMigrationValidator.Analyzer.csproj"
+                      OutputItemType="Analyzer"
+                      ReferenceOutputAssembly="false" />
+  </ItemGroup>
+
 </Project>

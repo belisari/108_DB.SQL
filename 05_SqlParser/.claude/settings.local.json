@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(dotnet pack *)",
+      "Bash(unzip -l SqlMigrationValidator.MSBuildTask.1.0.0.nupkg)",
+      "Bash(dotnet build *)"
+    ]
+  }
+}
