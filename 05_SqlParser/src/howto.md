@@ -8,6 +8,7 @@
 | `SqlMigrationValidator.Cli` | Standalone CLI tool (net8.0 executable) |
 | `SqlMigrationValidator.MSBuildTask` | MSBuild task NuGet package (net472) |
 | `SqlMigrationValidator.Consumer` | Example project that consumes the task package |
+| `SqlMigrationValidator.SqlProjConsumer` | Example SQL Server database project (`.sqlproj`, `Microsoft.Build.Sql` SDK) that consumes the task package |
 
 ---
 

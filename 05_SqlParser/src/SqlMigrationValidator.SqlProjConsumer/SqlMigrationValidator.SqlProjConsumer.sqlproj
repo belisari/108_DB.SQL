@@ -1,0 +1,57 @@
+<Project Sdk="Microsoft.Build.Sql/2.0.0-preview.1">
+  <PropertyGroup>
+    <Name>SqlMigrationValidator.SqlProjConsumer</Name>
+    <DSP>Microsoft.Data.Tools.Schema.Sql.Sql160DatabaseSchemaProvider</DSP>
+    <ModelCollation>1033, CI</ModelCollation>
+    <MigrationsDirectory>$(MSBuildProjectDirectory)\Migrations</MigrationsDirectory>
+    <TargetDatabaseSet>True</TargetDatabaseSet>
+    <ProjectGuid>{8dd5a95b-f378-4c80-acab-ff35d5a3717b}</ProjectGuid>
+
+    <!--
+      Pin the TargetFramework so restore (which may run via `dotnet restore`)
+      and build (which may run via VS's Full MSBuild) agree on the same TFM
+      in obj/project.assets.json. Without this, the Microsoft.Build.Sql SDK
+      uses netstandard2.1 under `dotnet` and net472 under VS, producing
+      NETSDK1005: "Assets file ... doesn't have a target for 'net472'".
+    -->
+    <TargetFramework>net472</TargetFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <!-- Migrations are runtime scripts validated by the MSBuild task,
+         not part of the database schema model — exclude from the SDK's default Build glob. -->
+    <Build Remove="Migrations\**" />
+    <None Include="Migrations\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <!--
+      The package ships its MSBuild task under tasks\net472\ (no lib\ folder).
+      IncludeAssets="build" tells NuGet to import the .targets file only and skip
+      compile/runtime asset selection, which otherwise emits warning 01005 on a
+      sqlproj because its effective TFM is not net472.
+      PrivateAssets="all" stops the reference flowing to anything that references
+      this sqlproj.
+    -->
+    <PackageReference Include="SqlMigrationValidator.MSBuildTask"
+                      Version="1.0.0"
+                      IncludeAssets="build"
+                      PrivateAssets="all" />
+  </ItemGroup>
+
+  <!--
+    Auto-pack the MSBuildTask into ../LocalPackages before restore so a fresh
+    checkout of the solution can build the sqlproj without a separate
+    `dotnet pack` step. The check on the .nupkg keeps this cheap on incremental
+    builds — pack only runs when the package is missing.
+  -->
+  <Target Name="EnsureMSBuildTaskPackage"
+          BeforeTargets="Restore;CollectPackageReferences"
+          Condition="!Exists('$(MSBuildProjectDirectory)\..\..\LocalPackages\SqlMigrationValidator.MSBuildTask.1.0.0.nupkg')">
+    <Message Importance="high"
+             Text="Packing SqlMigrationValidator.MSBuildTask into local feed..." />
+    <Exec Command="dotnet pack &quot;$(MSBuildProjectDirectory)\..\SqlMigrationValidator.MSBuildTask\SqlMigrationValidator.MSBuildTask.csproj&quot; -c Release -o &quot;$(MSBuildProjectDirectory)\..\..\LocalPackages&quot;"
+          WorkingDirectory="$(MSBuildProjectDirectory)\.." />
+  </Target>
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+</Project>

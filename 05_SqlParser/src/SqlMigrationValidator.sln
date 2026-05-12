@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlMigrationValidator.Consu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlMigrationValidator.Analyzer", "SqlMigrationValidator.Analyzer\SqlMigrationValidator.Analyzer.csproj", "{EE319FED-12C1-406E-B545-49A23DFE0934}"
 EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "SqlMigrationValidator.SqlProjConsumer", "SqlMigrationValidator.SqlProjConsumer\SqlMigrationValidator.SqlProjConsumer.sqlproj", "{8DD5A95B-F378-4C80-ACAB-FF35D5A3717B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -83,6 +85,24 @@ Global
 		{EE319FED-12C1-406E-B545-49A23DFE0934}.Release|x64.Build.0 = Release|Any CPU
 		{EE319FED-12C1-406E-B545-49A23DFE0934}.Release|x86.ActiveCfg = Release|Any CPU
 		{EE319FED-12C1-406E-B545-49A23DFE0934}.Release|x86.Build.0 = Release|Any CPU
+		{8DD5A95B-F378-4C80-ACAB-FF35D5A3717B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DD5A95B-F378-4C80-ACAB-FF35D5A3717B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DD5A95B-F378-4C80-ACAB-FF35D5A3717B}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{8DD5A95B-F378-4C80-ACAB-FF35D5A3717B}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8DD5A95B-F378-4C80-ACAB-FF35D5A3717B}.Debug|x64.Build.0 = Debug|Any CPU
+		{8DD5A95B-F378-4C80-ACAB-FF35D5A3717B}.Debug|x64.Deploy.0 = Debug|Any CPU
+		{8DD5A95B-F378-4C80-ACAB-FF35D5A3717B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{8DD5A95B-F378-4C80-ACAB-FF35D5A3717B}.Debug|x86.Build.0 = Debug|Any CPU
+		{8DD5A95B-F378-4C80-ACAB-FF35D5A3717B}.Debug|x86.Deploy.0 = Debug|Any CPU
+		{8DD5A95B-F378-4C80-ACAB-FF35D5A3717B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DD5A95B-F378-4C80-ACAB-FF35D5A3717B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DD5A95B-F378-4C80-ACAB-FF35D5A3717B}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{8DD5A95B-F378-4C80-ACAB-FF35D5A3717B}.Release|x64.ActiveCfg = Release|Any CPU
+		{8DD5A95B-F378-4C80-ACAB-FF35D5A3717B}.Release|x64.Build.0 = Release|Any CPU
+		{8DD5A95B-F378-4C80-ACAB-FF35D5A3717B}.Release|x64.Deploy.0 = Release|Any CPU
+		{8DD5A95B-F378-4C80-ACAB-FF35D5A3717B}.Release|x86.ActiveCfg = Release|Any CPU
+		{8DD5A95B-F378-4C80-ACAB-FF35D5A3717B}.Release|x86.Build.0 = Release|Any CPU
+		{8DD5A95B-F378-4C80-ACAB-FF35D5A3717B}.Release|x86.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

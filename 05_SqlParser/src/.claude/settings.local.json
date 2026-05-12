@@ -18,7 +18,17 @@
       "Bash(dotnet pack *)",
       "Bash(dotnet nuget *)",
       "Bash(unzip -l LocalPackages/SqlMigrationValidator.MSBuildTask.1.0.0.nupkg)",
-      "Bash(unzip -l \"C:\\\\Source\\\\108_DB.SQL\\\\05_SqlParser\\\\LocalPackages\\\\SqlMigrationValidator.MSBuildTask.1.0.0.nupkg\")"
+      "Bash(unzip -l \"C:\\\\Source\\\\108_DB.SQL\\\\05_SqlParser\\\\LocalPackages\\\\SqlMigrationValidator.MSBuildTask.1.0.0.nupkg\")",
+      "Bash(curl -s \"https://api.nuget.org/v3-flatcontainer/microsoft.build.sql/index.json\")",
+      "Bash(rm -f \"C:/Source/108_DB.SQL/05_SqlParser/LocalPackages/SqlMigrationValidator.MSBuildTask.1.0.0.nupkg\")",
+      "Bash(rm -rf \"C:/Users/emilw/.nuget/packages/sqlmigrationvalidator.msbuildtask\")",
+      "Bash(rm -rf \"C:/Source/108_DB.SQL/05_SqlParser/src/SqlMigrationValidator.SqlProjConsumer/obj\" \"C:/Source/108_DB.SQL/05_SqlParser/src/SqlMigrationValidator.SqlProjConsumer/bin\")",
+      "Bash(\"/c/Program Files/Microsoft Visual Studio/18/Community/MSBuild/Current/Bin/MSBuild.exe\" SqlMigrationValidator.SqlProjConsumer/SqlMigrationValidator.SqlProjConsumer.sqlproj -t:Restore,Build -p:Configuration=Debug)",
+      "Bash(\"/c/Program Files/Microsoft Visual Studio/18/Community/MSBuild/Current/Bin/MSBuild.exe\" SqlMigrationValidator.SqlProjConsumer/SqlMigrationValidator.SqlProjConsumer.sqlproj -t:Restore,Build -p:Configuration=Debug -v:normal)",
+      "Bash(\"/c/Program Files/Microsoft Visual Studio/18/Community/MSBuild/Current/Bin/MSBuild.exe\" SqlMigrationValidator.SqlProjConsumer/SqlMigrationValidator.SqlProjConsumer.sqlproj -t:Restore -p:Configuration=Debug)",
+      "Bash(\"/c/Program Files/Microsoft Visual Studio/18/Community/MSBuild/Current/Bin/MSBuild.exe\" SqlMigrationValidator.SqlProjConsumer/SqlMigrationValidator.SqlProjConsumer.sqlproj -t:Build -p:Configuration=Debug -v:diagnostic)",
+      "Bash(\"/c/Program Files/Microsoft Visual Studio/18/Community/MSBuild/Current/Bin/MSBuild.exe\" SqlMigrationValidator.SqlProjConsumer/SqlMigrationValidator.SqlProjConsumer.sqlproj -t:Restore,Build -p:Configuration=Debug -v:minimal)",
+      "Bash(\"/c/Program Files/Microsoft Visual Studio/18/Community/MSBuild/Current/Bin/MSBuild.exe\" SqlMigrationValidator.SqlProjConsumer/SqlMigrationValidator.SqlProjConsumer.sqlproj -restore -p:Configuration=Debug -v:minimal)"
     ]
   }
 }
